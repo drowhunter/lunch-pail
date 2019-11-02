@@ -5,20 +5,20 @@ namespace LunchPail
 {
 public class DbConnectionFactory : IDbConnectionFactory
 {
-  private readonly Func<IDbConnection> connectionFactoryFn;
+  private readonly Func<string,IDbConnection> connectionFactoryFn;
 
   /// <summary>
   /// Responsible for instantiating new IDbConnection's
   /// </summary>
   /// <param name="connectionFactory">Should return open IDbConnection instance</param>
-  public DbConnectionFactory(Func<IDbConnection> connectionFactory)
+  public DbConnectionFactory(Func<string,IDbConnection> connectionFactory)
   {
     this.connectionFactoryFn = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
   }
 
-  public IDbConnection CreateOpenConnection()
+  public IDbConnection CreateOpenConnection(string connectionName)
   {
-    return connectionFactoryFn();
+    return connectionFactoryFn(connectionName);
   }
 }
 }

@@ -5,10 +5,19 @@ using Xunit;
 
 namespace LunchPail.Tests
 {
+    public class MyDbContext : DbContext
+    {
+        public MyDbContext(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+        {
+        }
+
+        public override IDbConnection Connection => OpenConnection("DefaultConnection");
+    }
+
   public class DbContextTest
   {
     protected Mock<IDbConnection> connection;
-    protected DbContext db;
+    protected MyDbContext db;
     protected Mock<IDbConnectionFactory> dbConnectionFactory;
     protected Mock<IDbTransaction> transaction;
 
@@ -23,10 +32,10 @@ namespace LunchPail.Tests
         .Returns(transaction.Object);
 
       dbConnectionFactory
-        .Setup(u => u.CreateOpenConnection())
+        .Setup(u => u.CreateOpenConnection(It.IsAny<string>()))
         .Returns(connection.Object);
 
-      db = new DbContext(dbConnectionFactory.Object);
+      db = new MyDbContext(dbConnectionFactory.Object);
     }
 
     public class NewDbContext : DbContextTest

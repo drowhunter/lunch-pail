@@ -3,10 +3,10 @@ using System.Data;
 
 namespace LunchPail
 {
-  public class DbContext : IDbContext
+	public abstract class DbContext : IDbContext
   {
     private readonly IDbConnectionFactory connectionFactory;
-    private IDbConnection connection;
+		protected IDbConnection connection;
     private IDbTransaction transaction;
     private IUnitOfWork unitOfWork;
 
@@ -17,8 +17,7 @@ namespace LunchPail
 
     public IDbContextState State { get; private set; } = IDbContextState.Closed;
 
-    public IDbConnection Connection =>
-      connection ?? (connection = OpenConnection());
+		public abstract IDbConnection Connection { get; }
 
     public IDbTransaction Transaction =>
       transaction ?? (transaction = Connection.BeginTransaction());
@@ -57,10 +56,10 @@ namespace LunchPail
       }
     }
 
-    private IDbConnection OpenConnection()
+    protected IDbConnection OpenConnection(string connectionName)
     {
       State = IDbContextState.Open;
-      return connectionFactory.CreateOpenConnection();
+      return connectionFactory.CreateOpenConnection(connectionName);
     }
 
     private void Reset()

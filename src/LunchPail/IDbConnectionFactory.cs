@@ -5,6 +5,6 @@ namespace LunchPail
 {
 public interface IDbConnectionFactory
 {
-  IDbConnection CreateOpenConnection();
+  IDbConnection CreateOpenConnection(string connectionName);
 }
 }

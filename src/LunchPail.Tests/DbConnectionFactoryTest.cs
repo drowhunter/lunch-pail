@@ -16,7 +16,7 @@ namespace LunchPail.Tests
       connectionFactory = new DbConnectionFactory(ConnectionFactoryFn);
     }
 
-    public IDbConnection ConnectionFactoryFn()
+    public IDbConnection ConnectionFactoryFn(string connectionName)
     {
       var c = connection.Object;
       c.Open();
@@ -35,7 +35,7 @@ namespace LunchPail.Tests
           .Returns(ConnectionState.Open);
 
         //Act
-        var conn = connectionFactory.CreateOpenConnection();
+        var conn = connectionFactory.CreateOpenConnection("DefaultConnection");
 
         //Assert
         Assert.IsAssignableFrom<IDbConnection>(conn);
